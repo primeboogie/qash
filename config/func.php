@@ -1137,7 +1137,8 @@ function stkpush()
     if (sessioned()) {
 
         $uid = $_SESSION['suid'];
-        $apiUrl = 'https://api.boogiecoin.com';
+    $apiUrl = "https://api.nestlink.co.ke/runPrompt";
+
         $data = [
             'amount' => $amount,
             'phone' => $phone,
@@ -1187,7 +1188,8 @@ function stkpush()
         $predeposit = $bal['deposit'];
 
         // sendJsonResponse(200, true, null, $response);
-        if ($response['Status'] === true && $rescode === 0) {
+    if ($response['status'] === true && isset($response['data']) && $response['data']['ResultCode'] === "0") {
+
 
             $upbal = updates("bal", "deposit = deposit + '$amount'", "buid='$uid'");
 
