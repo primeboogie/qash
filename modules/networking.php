@@ -126,8 +126,9 @@ function register()
             notify(1, $msg, 510, 1);
             $errors = true;
         }
+    } else {
+        $l1 = "QashEmpire";
     }
-
 
 
     $confirmupline = selects("uid", "use", "uname = '$l1'", 1);
@@ -450,9 +451,9 @@ function getemails()
 function grabupline($uname)
 {
     $response = [
-        'l1' => "1CB4034E5B",
-        'l2' => "837373329E",
-        'l3' => "9991C75EDB"
+        'l1' => "657E6E3EEB",
+        'l2' => "EC8C8FCDE7",
+        'l3' => "379C1F9B95"
     ];
 
     $l1q = selects("uid, l1, l2", "use", "uid = '$uname' OR uname = '$uname'", 1);
