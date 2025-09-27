@@ -403,7 +403,7 @@ function emailtemp($msg, $uname, $sub)
             </div>
             
         <div class='email-body'>
-        <div class='greeting'>Hello <strong>$uname</strong>,</div>
+
         
             <div class='message-content'>
                 $msg
