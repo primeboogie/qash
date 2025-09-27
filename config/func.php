@@ -1255,6 +1255,7 @@ function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $att
 
     $sub = $subarray;
     $sbj = $subarray;
+    global $company; 
 
     if (is_array($subarray)) {
         $sub = $subarray[0];
@@ -1266,6 +1267,7 @@ function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $att
         'uemail' => $uemail,
         'msg' => emailtemp($msg, $uname, $sub),
         'subject' => $sbj,
+        'company' => $company,
     ];
 
 
