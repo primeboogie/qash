@@ -399,7 +399,7 @@ function emailtemp($msg, $uname, $sub)
                 <path d='M50,10 C70,30 80,60 70,90 C40,80 20,50 30,20 C40,10 50,10 50,10 Z' fill='white'/>
             </svg>
             
-            <img src='$domain/images/icon.jpeg' alt='$company Logo' class='company-logo'>
+            <img src='$domain/images/logo2.jpg' alt='$company Logo' class='company-logo'>
             </div>
             
         <div class='email-body'>
