@@ -1723,7 +1723,7 @@ function activateaccount($notify = true)
                         $predeposit = $confiml1['query']['bal']['deposit'];
 
                         $l1fee = $fee['fl1'];
-                        $l1feeconv = $accccurrency . " " . conv($accrate, $fee['fl1']);
+                        $l1feeconv = $accccurrency . " " . conv($accrate, round($fee['fl1']));
 
                         $accupdate = updates("bal", "balance = balance + '$l1fee', profit = profit + '$l1fee', way1 = way1 + '$l1fee'", "buid = '$l1ebuid'");
                         if ($accupdate['res']) {
@@ -1737,7 +1737,7 @@ function activateaccount($notify = true)
 
                             $sbj = "Level-1 Earnings";
                             $msg = "
-                             <strong>Fantastic News! You've Just Earned $l1feeconv from $accname</strong>  <br>
+                             <strong>You've Just Earned $l1feeconv from $accname</strong>  <br>
 
                                 Visit your dashboard to see your earnings and work smarter for more .
 
@@ -1768,7 +1768,7 @@ Keep Earning with EarnPower!";
                         $predeposit = $confiml2['query']['bal']['deposit'];
 
                         $l2fee = $fee['fl2'];
-                        $l2feeconv = $accccurrency . " " . conv($accrate, $fee['fl2']);
+                        $l2feeconv = $accccurrency . " " . conv($accrate, round($fee['fl2']));
 
                         $accupdate = updates("bal", "balance = balance + '$l2fee', profit = profit + '$l2fee', way1 = way1 + '$l2fee'", "buid = '$l2ebuid'");
                         $confiml2 = others($l2);
@@ -1782,7 +1782,7 @@ Keep Earning with EarnPower!";
                         if ($accupdate['res']) {
                             $sbj = "Level-2 Earnings";
                             $msg = "
-                             <strong>Fantastic News!    You've Just Earned $l2feeconv from $l1</strong>  <br>
+                             <strong>   You've Just Earned $l2feeconv from $l1</strong>  <br>
 
                                 Visit your dashboard to see your earnings and work smarter for more .
 
@@ -1807,7 +1807,7 @@ Keep Earning with EarnPower!";
 
 
                         $l3fee = $fee['fl3'];
-                        $l3feeconv = $accccurrency . " " . conv($accrate, $fee['fl3']);
+                        $l3feeconv = $accccurrency . " " . conv($accrate, round($fee['fl3']));
 
                         $accupdate = updates("bal", "balance = balance + '$l3fee', profit = profit + '$l3fee', way1 = way1 + '$l3fee'", "buid = '$l3ebuid'");
 
@@ -1822,7 +1822,7 @@ Keep Earning with EarnPower!";
                         if ($accupdate['res']) {
                             $sbj = "Level-3 Earnings";
                             $msg = "
-                             <strong>Fantastic News!  You've Just Earned $l3feeconv from $l2</strong>  <br>
+                             <strong> You've Just Earned $l3feeconv from $l2</strong>  <br>
 
                                 Visit your dashboard to see your earnings and work smarter for moree .
 
