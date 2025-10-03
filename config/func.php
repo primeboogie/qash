@@ -1621,6 +1621,8 @@ function activateaccount($notify = true)
         // notify(2,"Hello $accname Please Wait till 2 PM to activate your Account Kind Regards",2,1);
         // return sendJsonResponse(200);
 
+        global $company; 
+
         $data = $_SESSION['query']['data'];
         $bal = $_SESSION['query']['bal'];
         $fee = $_SESSION['query']['fee'];
@@ -1676,13 +1678,13 @@ function activateaccount($notify = true)
                 insertstrans($token, $uid, $accname, $accphone, "Account Activation", "6", 'NONE', `NULL`, $reg, '2', $balance, $balance, $deposit, $curdeposit, $today, $today, $l1, $uplineid, 2);
 
                 if ($activateacc['res']) {
-                    $sbj = "Welcome to Earn Power Connections ";
+                    $sbj = "Welcome to $company Connections ";
                     $msg = "
                     Dear $accname,<br>
 
                         Welcome aboard!<br><br>
 
-                        We’re excited to have you as a part of the Earn Power Connections family. Your journey to unlocking a world of earning opportunities starts now!<br><br>
+                        We’re excited to have you as a part of the $company Connections family. Your journey to unlocking a world of earning opportunities starts now!<br><br>
 
                         Here’s what awaits you:<br><br>
 
@@ -1699,10 +1701,10 @@ function activateaccount($notify = true)
 
                         If you need any assistance, our 24/7 customer service team is always ready to help.<br><br>
 
-                        Welcome again, and here’s to your success with Earn Power Connections!<br><br>
+                        Welcome again, and here’s to your success with $company Connections!<br><br>
 
                         Best regards,<br>  
-                        The Earn Power Connections Team<br>  
+                        The $company Connections Team<br>  
                         Powered by ZanyTech Co. Ltd<br>
                         ";
 
@@ -1723,7 +1725,7 @@ function activateaccount($notify = true)
                         $predeposit = $confiml1['query']['bal']['deposit'];
 
                         $l1fee = $fee['fl1'];
-                        $l1feeconv = $accccurrency . " " . conv($accrate, round($fee['fl1']));
+                        $l1feeconv = $accccurrency . " " . round(conv($accrate, $fee['fl1']));
 
                         $accupdate = updates("bal", "balance = balance + '$l1fee', profit = profit + '$l1fee', way1 = way1 + '$l1fee'", "buid = '$l1ebuid'");
                         if ($accupdate['res']) {
@@ -1768,7 +1770,7 @@ Keep Earning with EarnPower!";
                         $predeposit = $confiml2['query']['bal']['deposit'];
 
                         $l2fee = $fee['fl2'];
-                        $l2feeconv = $accccurrency . " " . conv($accrate, round($fee['fl2']));
+                        $l2feeconv = $accccurrency . " " . round(conv($accrate, $fee['fl2']));
 
                         $accupdate = updates("bal", "balance = balance + '$l2fee', profit = profit + '$l2fee', way1 = way1 + '$l2fee'", "buid = '$l2ebuid'");
                         $confiml2 = others($l2);
@@ -1807,7 +1809,7 @@ Keep Earning with EarnPower!";
 
 
                         $l3fee = $fee['fl3'];
-                        $l3feeconv = $accccurrency . " " . conv($accrate, round($fee['fl3']));
+                        $l3feeconv = $accccurrency . " " . round(conv($accrate, $fee['fl3']));
 
                         $accupdate = updates("bal", "balance = balance + '$l3fee', profit = profit + '$l3fee', way1 = way1 + '$l3fee'", "buid = '$l3ebuid'");
 

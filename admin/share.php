@@ -339,7 +339,7 @@ function registrationfee()
                     'fl1' => round(conv($data['crate'], $data['fl1'], true, false), 0),
                     'fl2' => round(conv($data['crate'], $data['fl2'], true, false), 0),
                     'fl3' => round(conv($data['crate'], $data['fl3'], true, false), 0),
-                    'active' => round(conv($data['crate'], $data['active'], true, false), 0),
+                    'active' => $data['active'],
                     'cbonus' => round(conv($data['crate'], $data['cbonus'], true, false), 0),
                     'min_with' => round(conv($data['crate'], $data['min_with'], true, false), 0),
                     'charges' => round(conv($data['crate'], $data['charges'], true, false), 0),

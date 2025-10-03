@@ -90,12 +90,15 @@ function register()
 
     $uname = Ucap(mytrim($inputs['username']));
     $uemail = mytrim($inputs['email']);
-    $uphone = mytrim(ltrim($inputs['phone'], '0'));
     $password = $inputs['password'];
     $repassword = $inputs['repassword'] ?? null;
     $ucountry = $inputs['country'];
     $default_currency = 'KEST';
     $parent_id = NULL;
+
+    // consider 
+    
+    $uphone = mytrim(ltrim($inputs['phone'], '0'));
 
     if ($password !== $repassword) {
         $msg = "Your Password Din't Match";
