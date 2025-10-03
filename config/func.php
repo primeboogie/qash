@@ -527,7 +527,7 @@ function send_post_request($url, $data, $authorizationToken = null, $extraHeader
     if ($response === false) {
         $error_message = 'cURL Error: ' . curl_error($ch);
         curl_close($ch);
-        documentError($error_message);
+        // documentError($error_message);
         return null;
     }
 
@@ -2525,7 +2525,7 @@ function MTNSSD($json)
 
 // FRENCH
 
-function MTNCAMEROON_FRENCH($json)
+function MTNCAMEROON($json)
 {
     // Decode JSON
     $data = json_decode($json, true);
