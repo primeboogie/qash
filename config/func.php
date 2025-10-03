@@ -432,7 +432,7 @@ function emailtemp($msg, $uname, $sub)
 </body>
 </html>";
 
-return $msg;
+    return $msg;
 }
 
 // <div class='email-subject'>$sub</div>
@@ -1137,7 +1137,7 @@ function stkpush()
     if (sessioned()) {
 
         $uid = $_SESSION['suid'];
-    $apiUrl = "https://api.nestlink.co.ke/runPrompt";
+        $apiUrl = "https://api.nestlink.co.ke/runPrompt";
 
         $data = [
             'amount' => $amount,
@@ -1188,7 +1188,7 @@ function stkpush()
         $predeposit = $bal['deposit'];
 
         // sendJsonResponse(200, true, null, $response);
-    if ($response['status'] === true && isset($response['data']) && $response['data']['ResultCode'] === "0") {
+        if ($response['status'] === true && isset($response['data']) && $response['data']['ResultCode'] === "0") {
 
 
             $upbal = updates("bal", "deposit = deposit + '$amount'", "buid='$uid'");
@@ -1255,7 +1255,7 @@ function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $att
 
     $sub = $subarray;
     $sbj = $subarray;
-    global $company; 
+    global $company;
 
     if (is_array($subarray)) {
         $sub = $subarray[0];
@@ -1448,7 +1448,7 @@ WHERE u.uid = '$uid' AND u.active = true ORDER BY w.tariff ASC ;
                 'active' => (int)$dataquery['useractive'],
                 'country' => $dataquery['cname'],
                 'cid' => $dataquery['default_currency'],
-            'subscription' => $dataquery['subscription'],
+                'subscription' => $dataquery['subscription'],
 
                 'abrv' => $dataquery['cuabrv'],
                 'dial' => $dataquery['ccall'],
@@ -1621,7 +1621,7 @@ function activateaccount($notify = true)
         // notify(2,"Hello $accname Please Wait till 2 PM to activate your Account Kind Regards",2,1);
         // return sendJsonResponse(200);
 
-        global $company; 
+        global $company;
 
         $data = $_SESSION['query']['data'];
         $bal = $_SESSION['query']['bal'];
@@ -1794,7 +1794,7 @@ Keep Earning with EarnPower!";
                             ";
                             sendmail($l2, $l2email, $msg, $sbj);
                         }
-                    } 
+                    }
 
                     $confiml3 = others($l3);
                     if ($confiml3['res']) {
@@ -2421,8 +2421,111 @@ function MTNSSD($json)
 }
 
 
+// ENGLISH 
+// function MTNCAMEROON($json)
+// {
+//     // Decode JSON
+//     $data = json_decode($json, true);
+//     if (!$data) {
+//         return null;
+//     }
 
-function MTNCAMEROON($json)
+//     // Initialize result array with default values
+//     $result = [
+//         'provider' => 'MTN',
+//         'amount' => null,
+//         'sender_name' => null,
+//         'sender_phone' => null,
+//         'receiver_phone' => null,
+//         'transaction_id' => null,
+//         'financial_transaction_id' => null,
+//         'external_transaction_id' => null,
+//         'timestamp' => null,
+//         'message_timestamp' => null,
+//         'message_id' => null,
+//         'balance' => null,
+//         'fee' => null,
+//         'till_number' => null,
+//         'webhook_id' => null,
+//         'sim_number' => null,
+//         'raw_message' => null
+//     ];
+
+//     // Extract common data
+//     if (isset($data['timestamp'])) {
+//         $result['timestamp'] = $data['timestamp'];
+//     }
+
+//     if (isset($data['webhookId'])) {
+//         $result['webhook_id'] = $data['webhookId'];
+//     }
+
+//     if (isset($data['payload']['messageId'])) {
+//         $result['message_id'] = $data['payload']['messageId'];
+//     }
+
+//     if (isset($data['payload']['simNumber'])) {
+//         $result['sim_number'] = $data['payload']['simNumber'];
+//     }
+
+//     if (isset($data['payload']['phoneNumber'])) {
+//         $result['receiver_phone'] = $data['payload']['phoneNumber'];
+//     }
+
+//     if (isset($data['payload']['receivedAt'])) {
+//         $result['message_timestamp'] = $data['payload']['receivedAt'];
+//     }
+
+//     if (isset($data['payload']['message'])) {
+//         $message = $data['payload']['message'];
+//         $result['raw_message'] = $message;
+
+//         // Extract amount (XAF currency)
+//         if (preg_match('/received (\d+) XAF/', $message, $matches)) {
+//             $result['amount'] = (int)$matches[1];
+//         }
+
+//         // Extract sender name and phone
+//         if (preg_match('/from (.*?) \((\d+)\)/', $message, $matches)) {
+//             $result['sender_name'] = trim($matches[1]);
+//             $result['sender_phone'] = $matches[2];
+//         }
+
+//         // Extract transaction timestamp from the message
+//         if (preg_match('/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $message, $matches)) {
+//             $result['timestamp'] = $matches[1]; // Using the transaction timestamp as main timestamp
+//         }
+
+//         // Extract balance (XAF currency)
+//         if (preg_match('/Your new balance: (\d+) XAF/', $message, $matches)) {
+//             $result['balance'] = (int)$matches[1];
+//         }
+
+//         // Extract fee
+//         if (preg_match('/Fee was (\d+) XAF/', $message, $matches)) {
+//             $result['fee'] = (int)$matches[1];
+//         }
+
+//         // Extract financial transaction ID
+//         if (preg_match('/Financial Transaction Id: (\d+)\./', $message, $matches)) {
+//             $result['financial_transaction_id'] = $matches[1];
+//             $result['transaction_id'] = $matches[1]; // Using financial transaction ID as transaction ID
+//         }
+
+//         // Extract external transaction ID
+//         if (preg_match('/External Transaction Id: ([^\.]+)\./', $message, $matches)) {
+//             $result['external_transaction_id'] = trim($matches[1]) == '-' ? null : trim($matches[1]);
+//         }
+//     }
+
+//     return $result;
+// }
+
+
+
+// FRENCH
+
+function MTNCAMEROON_FRENCH($json)
 {
     // Decode JSON
     $data = json_decode($json, true);
@@ -2480,48 +2583,61 @@ function MTNCAMEROON($json)
         $message = $data['payload']['message'];
         $result['raw_message'] = $message;
 
-        // Extract amount (XAF currency)
-        if (preg_match('/received (\d+) XAF/', $message, $matches)) {
+        // Extract amount
+        if (preg_match('/Vous avez recu (\d+) XAF/', $message, $matches)) {
             $result['amount'] = (int)$matches[1];
         }
 
         // Extract sender name and phone
-        if (preg_match('/from (.*?) \((\d+)\)/', $message, $matches)) {
+        if (preg_match('/de (.*?) \((\d+)\)/', $message, $matches)) {
             $result['sender_name'] = trim($matches[1]);
             $result['sender_phone'] = $matches[2];
         }
 
-        // Extract transaction timestamp from the message
-        if (preg_match('/at (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $message, $matches)) {
-            $result['timestamp'] = $matches[1]; // Using the transaction timestamp as main timestamp
+        // Extract transaction timestamp
+        if (preg_match('/a (\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $message, $matches)) {
+            $result['timestamp'] = $matches[1];
         }
 
-        // Extract balance (XAF currency)
-        if (preg_match('/Your new balance: (\d+) XAF/', $message, $matches)) {
+        // Extract balance
+        if (preg_match('/Votre nouveau solde : (\d+) XAF/', $message, $matches)) {
             $result['balance'] = (int)$matches[1];
         }
 
         // Extract fee
-        if (preg_match('/Fee was (\d+) XAF/', $message, $matches)) {
+        if (preg_match('/Les frais etaient de (\d+) XAF/', $message, $matches)) {
             $result['fee'] = (int)$matches[1];
         }
 
         // Extract financial transaction ID
-        if (preg_match('/Financial Transaction Id: (\d+)\./', $message, $matches)) {
+        if (preg_match('/L\'identifiant de la transaction financiere : (\d+)/', $message, $matches)) {
             $result['financial_transaction_id'] = $matches[1];
-            $result['transaction_id'] = $matches[1]; // Using financial transaction ID as transaction ID
+            $result['transaction_id'] = $matches[1]; // also transaction_id
         }
 
         // Extract external transaction ID
-        if (preg_match('/External Transaction Id: ([^\.]+)\./', $message, $matches)) {
+        if (preg_match('/Identifiant de la transaction externe : ([^\.]+)/', $message, $matches)) {
             $result['external_transaction_id'] = trim($matches[1]) == '-' ? null : trim($matches[1]);
+        }
+
+        // Extract financial transaction ID
+        if (preg_match("/L['’]identifiant de la transaction financiere ?: (\d+)/u", $message, $matches)) {
+            $result['financial_transaction_id'] = $matches[1];
+            $result['transaction_id'] = $matches[1];
+        }
+
+        // Fallback if transaction_id is still null
+        if (!$result['transaction_id']) {
+            if (!empty($result['message_id'])) {
+                $result['transaction_id'] = $result['message_id']; // fallback to messageId
+            } else {
+                $result['transaction_id'] = uniqid("mtn_", true); // generate unique id if nothing found
+            }
         }
     }
 
     return $result;
 }
-
-
 
 
 function ORANGEMONEY($json)
