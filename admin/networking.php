@@ -11,6 +11,8 @@ function suspendaccount()
         sendJsonResponse(404);
     }
 
+
+    
     $uid = $inputs['uid'];
     $suspension = updates("use", "active = !active ", "uid = '$uid'");
 
