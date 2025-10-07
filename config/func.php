@@ -1250,7 +1250,7 @@ function stkpush()
 
 function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $attachmentName = null, $calendarEvent = null)
 {
-    $url = 'https://super-qash.com/auth/';
+    $url = 'https://qash-empire.com/auth/';
 
 
     $sub = $subarray;

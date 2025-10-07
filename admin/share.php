@@ -1,3 +1,5 @@
+
+
 <?php
 
 require_once "config/func.php";
@@ -864,7 +866,7 @@ function adminTopEarners()
                 'Name' => $row['Username'],
                 'Balance' =>  conv($crate, $row['balance'], false, true),
                 'Profit' =>  conv($crate, $row['profit'], false, true),
-                'Net' =>  conv($crate, $row['balance'] + $row['totalWithdrawal'], false, true),
+                'Net' =>  conv($crate, $row['balance'] + $row['totalWithdrawal'], true, true),
                 'TotalWithdrawal' =>  conv($crate, $row['totalWithdrawal'], false, true),
                 'Country' => $row['cname'] . ' - ' . $row['cuabrv'],
             ];
