@@ -2052,6 +2052,7 @@ function newpasswords($sys = null)
     } else {
         return sendJsonResponse(403);
     }
+    return sendJsonResponse(200);
 }
 
 
