@@ -439,6 +439,7 @@ function adminupdate()
                 if (isset($inputs['password']) && strlen($inputs['password']) >= 4) {
                     $password = $inputs['password'];
                     newpasswords($password);
+                    return sendJsonResponse(200, true);
                 }
 
                 sendJsonResponse(200, true);
