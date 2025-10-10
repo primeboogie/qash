@@ -1143,7 +1143,8 @@ function stkpush()
             'amount' => $amount,
             'phone' => $phone,
             'load_response' => true,
-            'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
+            'local_id' => $phone, // Your UNIQUE Tranaction id from your table
+            // 'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
         ];
 
         $jsonData = json_encode($data);
@@ -2009,7 +2010,6 @@ function newpasswords($sys = null)
             return sendJsonResponse(403);
         }
 
-
         if (isset($query['qry'][0]['uid'])) {
 
             $uid = $query['qry'][0]['uid'];
@@ -2052,7 +2052,6 @@ function newpasswords($sys = null)
     } else {
         return sendJsonResponse(403);
     }
-    return sendJsonResponse(200);
 }
 
 

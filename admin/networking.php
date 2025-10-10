@@ -340,8 +340,6 @@ function jaddtrans()
 
         global $today;
 
-
-
         $data = $_SESSION['query']['data'];
         $bal = $_SESSION['query']['bal'];
         $fee = $_SESSION['query']['fee'];
@@ -442,7 +440,6 @@ function adminupdate()
                     return sendJsonResponse(200, true);
                 }
 
-                sendJsonResponse(200, true);
             } else {
                 notify(2, "Sorry We had an issue Updating The records", 200, 1);
                 sendJsonResponse(400);
@@ -470,6 +467,7 @@ function adminupdate()
             notify(2, "Sorry We had an issue Updating The records", 200, 1);
             sendJsonResponse(400);
         }
+
     } elseif ($action == 3 && $uid) {
         // login
         $stoken = generatetoken(82);
