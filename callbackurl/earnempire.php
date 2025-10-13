@@ -19,12 +19,12 @@ $callbackContent = json_decode($stkCallbackResponse, true);
 require dirname(__DIR__) . "/config/func.php";
 
 // Validate body
-if (!isset($callbackContent['body'])) {
+if (!isset($callbackContent)) {
     echo json_encode(["error" => "Invalid payload structure"]);
     exit;
 }
 
-$body = $callbackContent['body'];
+$body = $callbackContent;
 
 // Extract required fields
 $api_key = $body['api_key'] ?? null;
