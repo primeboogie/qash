@@ -1119,134 +1119,156 @@ function stkpush()
 {
     $inputs = jDecode();
 
-    if (!isset($inputs['amount']) || !isset($inputs['phone'])) {
-        sendJsonResponse(404);
+    // Validate required fields
+    if (empty($inputs['amount']) || empty($inputs['phone'])) {
+        sendJsonResponse(404, false, "Missing required fields: amount or phone");
+        return;
     }
+
+    // Clean phone number (Kenya format: 254XXXXXXXXX)
+    $clean = preg_replace('/\D/', '', $inputs['phone']);
+    $phone = (str_starts_with($clean, '254')) ? $clean : '254' . substr($clean, -9);
+
     $amount = mytrim($inputs['amount']);
-    $phone = "0" . substr(preg_replace('/\D/', '', $inputs['phone']), -9);
-
-
     $array = [];
     $apitoken = getstkpushtoken();
+
     global $today;
     global $admin;
 
     $tratoken = checktoken("tra", generatetoken(4, true), true);
-
-
-    if (sessioned()) {
-
-        $uid = $_SESSION['suid'];
-        $apiUrl = "https://api.nestlink.co.ke/runPrompt";
-
-        $data = [
-            'amount' => $amount,
-            'phone' => $phone,
-            'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
-        ];
-        // 'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
-
-        $jsonData = json_encode($data);
-        $ch = curl_init($apiUrl);
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Api-Secret: ' . $apitoken,
-        ]);
-
-        $response = curl_exec($ch);
-
-        if ($response === false) {
-            // notify(1,'cURL error: ' . curl_error($ch),405, 3);
-            $adminmsg = "We are Experiencing  an issue requesting/receving Safaricom STK-PUSH Currently You'll be notified on the next Email as 
-        The Support-Team is working on it $today Many-Regards";
-            notify(1, $adminmsg, 405, 2);
-            notify(0, "Request Was not sent Please hold as we resolve this issue Kind Regards", 405, 1);
-            return $array;
-        }
-
-        curl_close($ch);
-
-        $response = json_decode($response, true);
-
-        $rescode = $response['data']['ResultCode'] ?? null;
-        $desc = $response['data']['ResultDesc']  ?? null;
-
-
-        $data = $_SESSION['query']['data'];
-        $bal = $_SESSION['query']['bal'];
-
-        $l1 = $data['l1'];
-        $uplineid = $data['uplineid'];
-
-        $uname = $data['uname'];
-
-        $prebalance = $bal['balance'];
-        $predeposit = $bal['deposit'];
-
-        // sendJsonResponse(200, true, null, $response);
-        if ($response['status'] === true && isset($response['data']) && $response['data']['ResultCode'] === "0") {
-
-
-            $upbal = updates("bal", "deposit = deposit + '$amount'", "buid='$uid'");
-
-            if ($upbal['res'] == true) {
-                data();
-
-                // $newdata = $_SESSION['query']['data']; 
-                $newbal = $_SESSION['query']['bal'];
-
-                $balance = $newbal['balance'];
-                $deposit = $newbal['deposit'];
-
-                $instra =   insertstrans($tratoken, $uid, $uname, $phone, "Account Deposit", "7", 'KDOE', `NULL`, $amount, '2', $prebalance, $balance, $predeposit, $deposit, $today, $today, $l1, $uplineid, 2);
-
-                if ($instra['res'] === false) {
-                    notify(1, "qry->stkpush", 407, 3);
-                }
-            } else {
-                notify(1, "qry->stkpush ", 408, 3);
-            }
-
-            $curdate = date("Y-m-d");
-            $totaldip = selects("SUM(tamount)", "tra", "tcat = '7' AND tstatus = '2' AND tdate like '%$curdate%'", 1)['qry'][0][0] ?? "1";
-            $totalwith = selects("SUM(tamount)", "tra", "tcat = '3' AND tdate like '%$curdate%'", 1)['qry'][0][0] ?? "1";
-            $amount = $amount . " KES";
-            notify(2, $desc, "$rescode", 1);
-            $msg = " Confirmed New-Deposit;
-            <ul>
-            <li>Name => $uname</li>
-            <li>Upline => $l1</li>
-            <li>Amount => $amount</li>
-            <li>Phone => $phone</li>
-            <li>Total Deposit => $totaldip</li>
-            <li>Total Withdrawal => $totalwith</li>
-            </ul>
-            You'll Be Notified On the Next Transaction, Deposit Approved Worth $amount";
-            $subject = "New Deposit Approved";
-
-            sendmail($admin['name'], $admin['email'], $msg, $subject);
-
-            $array['desc'] = $desc;
-            $array['res'] = true;
-            unset($array['qry']);
-        } else {
-            $instra  = inserts(
-                "tra",
-                "tid,tuid,tuname,ttype,tcat,tamount,tstatus,tprebalance,tbalance,tpredeposit,tdeposit,tdate,tduedate,trefuname,trefuid,payment_type,ref_payment",
-                ['sssssisiiiissssss', $tratoken, $uid, $uname, "Deposit", '7', $amount, 1, $prebalance, $prebalance, $predeposit, $predeposit, $today, $today, $uname, $uid, 'KDOE', `NULL`]
-            );
-            notify(0, $desc, "stk->$desc", 1);
-            $array['qry'] = $desc;
-            $array['code'] = $rescode;
-        }
+    if (!$tratoken) {
+        notify(1, "Failed to generate transaction token", 500, 3);
+        sendJsonResponse(500, false, "Internal error: token generation failed");
+        return;
     }
 
-    return sendJsonResponse(200, true, null);
+    if (!sessioned()) {
+        sendJsonResponse(401, false, "Session expired or unauthorized");
+        return;
+    }
+
+    $uid = $_SESSION['suid'];
+    $apiUrl = "https://api.nestlink.co.ke/runPrompt";
+
+    $data = [
+        'amount' => $amount,
+        'phone' => $phone,
+        'local_id' => $tratoken,
+    ];
+
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Api-Secret: ' . $apitoken,
+    ]);
+
+    $response = curl_exec($ch);
+
+    if ($response === false) {
+        notify(1, "cURL error: " . curl_error($ch), 405, 3);
+        $adminmsg = "Safaricom STK-PUSH request failed. Team is working on it. $today Regards.";
+        notify(1, $adminmsg, 405, 2);
+        notify(0, "Request failed. Please hold as we resolve the issue.", 405, 1);
+        curl_close($ch);
+        sendJsonResponse(500, false, "STK request failed");
+        return;
+    }
+
+    curl_close($ch);
+    $response = json_decode($response, true);
+
+    if (!is_array($response) || !isset($response['data'])) {
+        notify(1, "Invalid response format from STK API", 500, 3);
+        sendJsonResponse(500, false, "Invalid response from provider");
+        return;
+    }
+
+    $rescode = $response['data']['ResultCode'] ?? null;
+    $desc = $response['data']['ResultDesc'] ?? "No description";
+    $status = $response['status'] ?? false;
+
+    $data = $_SESSION['query']['data'];
+    $bal = $_SESSION['query']['bal'];
+
+    $uname = $data['uname'];
+    $uplineid = $data['uplineid'];
+    $l1 = $data['l1'];
+
+    $prebalance = $bal['balance'];
+    $predeposit = $bal['deposit'];
+
+    // STK SUCCESS
+    if ($status && isset($rescode) && (int)$rescode === 0) {
+
+        $upbal = updates("bal", "deposit = deposit + '$amount'", "buid='$uid'");
+
+        if ($upbal['res'] === true) {
+            data();
+            $newbal = $_SESSION['query']['bal'];
+            $balance = $newbal['balance'];
+            $deposit = $newbal['deposit'];
+
+            $instra = insertstrans(
+                $tratoken, $uid, $uname, $phone,
+                "Account Deposit", "7", 'KDOE', NULL,
+                $amount, '2',
+                $prebalance, $balance,
+                $predeposit, $deposit,
+                $today, $today,
+                $l1, $uplineid, 2
+            );
+
+            if ($instra['res'] === false) {
+                notify(1, "qry->stkpush insert failed", 407, 3);
+            }
+        } else {
+            notify(1, "qry->stkpush update balance failed", 408, 3);
+        }
+
+        $curdate = date("Y-m-d");
+        $totaldip = selects("SUM(tamount)", "tra", "tcat = '7' AND tstatus = '2' AND tdate LIKE '%$curdate%'", 1)['qry'][0][0] ?? "0";
+        $totalwith = selects("SUM(tamount)", "tra", "tcat = '3' AND tdate LIKE '%$curdate%'", 1)['qry'][0][0] ?? "0";
+
+        notify(2, $desc, "$rescode", 1);
+
+        $msg = "
+            Confirmed New Deposit:
+            <ul>
+                <li>Name => $uname</li>
+                <li>Upline => $l1</li>
+                <li>Amount => {$amount} KES</li>
+                <li>Phone => $phone</li>
+                <li>Total Deposit => $totaldip</li>
+                <li>Total Withdrawal => $totalwith</li>
+            </ul>
+            You'll be notified on the next transaction. Deposit Approved Worth {$amount} KES.
+        ";
+        $subject = "New Deposit Approved";
+        sendmail($admin['name'], $admin['email'], $msg, $subject);
+
+        $array['desc'] = $desc;
+        $array['res'] = true;
+    } else {
+        // STK FAILED OR PENDING
+        inserts(
+            "tra",
+            "tid,tuid,tuname,ttype,tcat,tamount,tstatus,tprebalance,tbalance,tpredeposit,tdeposit,tdate,tduedate,trefuname,trefuid,payment_type,ref_payment",
+            ['sssssisiiiissssss', $tratoken, $uid, $uname, "Deposit", '7', $amount, 1, $prebalance, $prebalance, $predeposit, $predeposit, $today, $today, $uname, $uid, 'KDOE', NULL]
+        );
+
+        notify(0, $desc, "stk->$desc", 1);
+        $array['qry'] = $desc;
+        $array['code'] = $rescode;
+        $array['res'] = false;
+    }
+
+    sendJsonResponse(200, true, "STK push processed", $array);
 }
+
 
 function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $attachmentName = null, $calendarEvent = null)
 {
