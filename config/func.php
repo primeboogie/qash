@@ -1142,8 +1142,7 @@ function stkpush()
         $data = [
             'amount' => $amount,
             'phone' => $phone,
-            'load_response' => true,
-            'local_id' => $phone, // Your UNIQUE Tranaction id from your table
+            'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
         ];
         // 'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
 
