@@ -1144,8 +1144,8 @@ function stkpush()
             'phone' => $phone,
             'load_response' => true,
             'local_id' => $phone, // Your UNIQUE Tranaction id from your table
-            // 'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
         ];
+        // 'local_id' => $tratoken, // Your UNIQUE Tranaction id from your table
 
         $jsonData = json_encode($data);
         $ch = curl_init($apiUrl);

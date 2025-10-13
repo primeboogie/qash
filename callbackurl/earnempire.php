@@ -1,42 +1,60 @@
 <?php
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', 'error.log');
 
-
 header("Content-Type: application/json");
 
+// Get the raw POST body
 $stkCallbackResponse = file_get_contents('php://input');
+
+// Log it for debugging
 $logFile = "stkboogie_power.json";
-$log = fopen($logFile, "a");
-fwrite($log, $stkCallbackResponse);
-fclose($log);
+file_put_contents($logFile, $stkCallbackResponse . PHP_EOL, FILE_APPEND);
 
-$callbackContent = json_decode($stkCallbackResponse);
+// Decode JSON
+$callbackContent = json_decode($stkCallbackResponse, true);
 
-$ResultCode = $callbackContent->Body->stkCallback->ResultCode;
+require dirname(__DIR__) . "/config/func.php";
 
-// echo "rtest";
-
-require  dirname(__DIR__) . "/config/func.php";
-
-// sendmail("stk","primemarkboogie@gmail.com","stk-prompt","@stk");
-
-if($ResultCode == 0)
-{
-
-
-$CheckoutRequestID = $callbackContent->Body->stkCallback->CheckoutRequestID;
-$local_id = $callbackContent->Body->local_id;
-$Amount = $callbackContent->Body->stkCallback->CallbackMetadata->Item[0]->Value;
-$MpesaReceiptNumber = $callbackContent->Body->stkCallback->CallbackMetadata->Item[1]->Value;
-$PhoneNumber = substr($CheckoutRequestID, -8);
-
-updates("tra","ref_payment = '$MpesaReceiptNumber'","tid = '$local_id'");
-
+// Validate body
+if (!isset($callbackContent['body'])) {
+    echo json_encode(["error" => "Invalid payload structure"]);
+    exit;
 }
+
+$body = $callbackContent['body'];
+
+// Extract required fields
+$api_key = $body['api_key'] ?? null;
+$local_id = $body['local_id'] ?? null;
+$paid = $body['paid'] ?? false;
+$result_code = $body['result_code'] ?? null;
+$result = $body['result'] ?? [];
+
+$amount = $result['amount'] ?? null;
+$ref_code = $result['ref_code'] ?? null; // This acts like MpesaReceiptNumber
+$msg = $result['msg'] ?? null;
+
+// Only update if payment was successful
+if ($paid === true && $result_code === 0) {
+    updates("tra", "ref_payment = '$ref_code'", "tid = '$local_id'");
+    echo json_encode([
+        "status" => "success",
+        "message" => "Payment recorded successfully",
+        "local_id" => $local_id,
+        "receipt" => $ref_code
+    ]);
+} else {
+    echo json_encode([
+        "status" => "failed",
+        "message" => $msg ?? "Payment not successful",
+        "local_id" => $local_id,
+        "result_code" => $result_code
+    ]);
+}
+
 
 // require "../config/func.php";
 
