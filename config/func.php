@@ -1172,8 +1172,8 @@ function stkpush()
 
         $response = json_decode($response, true);
 
-        $rescode = $response['Resultcode'] ?? null;
-        $desc = $response['Desc']  ?? null;
+        $rescode = $response['data']['ResultCode'] ?? null;
+        $desc = $response['data']['ResultDesc']  ?? null;
 
 
         $data = $_SESSION['query']['data'];
@@ -1217,15 +1217,15 @@ function stkpush()
             $amount = $amount . " KES";
             notify(2, $desc, "$rescode", 1);
             $msg = " Confirmed New-Deposit;
-        <ul>
-        <li>Name => $uname</li>
-        <li>Upline => $l1</li>
-        <li>Amount => $amount</li>
-        <li>Phone => $phone</li>
-        <li>Total Deposit => $totaldip</li>
-        <li>Total Withdrawal => $totalwith</li>
-        </ul>
-        You'll Be Notified On the Next Transaction, Deposit Approved Worth $amount";
+            <ul>
+            <li>Name => $uname</li>
+            <li>Upline => $l1</li>
+            <li>Amount => $amount</li>
+            <li>Phone => $phone</li>
+            <li>Total Deposit => $totaldip</li>
+            <li>Total Withdrawal => $totalwith</li>
+            </ul>
+            You'll Be Notified On the Next Transaction, Deposit Approved Worth $amount";
             $subject = "New Deposit Approved";
 
             sendmail($admin['name'], $admin['email'], $msg, $subject);
@@ -1239,7 +1239,7 @@ function stkpush()
                 "tid,tuid,tuname,ttype,tcat,tamount,tstatus,tprebalance,tbalance,tpredeposit,tdeposit,tdate,tduedate,trefuname,trefuid,payment_type,ref_payment",
                 ['sssssisiiiissssss', $tratoken, $uid, $uname, "Deposit", '7', $amount, 1, $prebalance, $prebalance, $predeposit, $predeposit, $today, $today, $uname, $uid, 'KDOE', `NULL`]
             );
-            notify(0, $desc, "stk->$rescode", 1);
+            notify(0, $desc, "stk->$desc", 1);
             $array['qry'] = $desc;
             $array['code'] = $rescode;
         }
