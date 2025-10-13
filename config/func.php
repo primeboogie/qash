@@ -1245,7 +1245,7 @@ function stkpush()
         }
     }
 
-    return sendJsonResponse(200, true, null, $array);
+    return sendJsonResponse(200, true, null);
 }
 
 function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $attachmentName = null, $calendarEvent = null)
