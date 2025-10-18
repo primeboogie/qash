@@ -3,9 +3,9 @@ require 'config.php';
 
 date_default_timezone_set('Africa/Nairobi');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
+// use PHPMailer\PHPMailer\SMTP;
 
 $today =  date("Y-m-d H:i:s");
 $mintoday =  date("Y-m-d");
@@ -58,9 +58,9 @@ function sendJsonResponse($statusCode, $resultcode = false, $message = null, $da
         $response['data'] = $data;
     }
 
-    if (isset($_SESSION['notify'])) {
-        $response['info'] = $_SESSION['notify'];
-    }
+    // if (isset($_SESSION['notify'])) {
+    //     $response['info'] = $_SESSION['notify'];
+    // }
 
     unset($_SESSION);
     header('Content-Type: application/json');
@@ -68,6 +68,7 @@ function sendJsonResponse($statusCode, $resultcode = false, $message = null, $da
 
     exit;
 }
+
 
 function jDecode($expect = null)
 {
