@@ -96,7 +96,7 @@ function register()
     $parent_id = NULL;
 
     // consider 
-    
+
     $uphone = mytrim(ltrim($inputs['phone'], '0'));
 
     if ($password !== $repassword) {
@@ -698,7 +698,7 @@ function answerdquiz()
 
                 $data = $_SESSION['query']['data'];
                 $bal = $_SESSION['query']['bal'];
-                $fee = $_SESSION['query']['fee']; 
+                $fee = $_SESSION['query']['fee'];
 
                 $uid = $_SESSION['suid'];
                 $accrate = $data['rate'];
@@ -1340,6 +1340,11 @@ function payAds()
                         notify(2, "Successfully Recieved Ads Promotion Worth $convert", 200, 1);
                     }
                     sendJsonResponse(200);
+                    // header('Content-Type: application/json');
+
+                    // http_response_code(200);
+                    // echo json_encode(["succ" => "true"]);
+                    // exit;
                 } else {
                     // notify(1,"Paid Ads Link wasent Found",300,1);
                     // notify(1,"Paid Ads Link wasent Found for $addId",300,3);
@@ -2880,7 +2885,7 @@ function requestSpin()
                     return sendJsonResponse(500);
                 }
             } else {
-        $sysamount = conv($crate, $stakeAmount, TRUE);
+                $sysamount = conv($crate, $stakeAmount, TRUE);
 
                 notify(1, "Casino Minimum Stake is $sysamount $accccurrency", 403, 1);
                 return sendJsonResponse(403);
@@ -2948,6 +2953,4 @@ function singleTariff($cid, $return = false)
 // add vochuer
 // check voucher
 // reddem voucher
-function addVoucher(){
-
-}
+function addVoucher() {}

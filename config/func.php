@@ -10,6 +10,66 @@ date_default_timezone_set('Africa/Nairobi');
 $today =  date("Y-m-d H:i:s");
 $mintoday =  date("Y-m-d");
 
+// function sendJsonResponse($statusCode, $resultcode = false, $message = null, $data = null)
+// {
+
+//     $resultcode ??= false;
+//     http_response_code($statusCode);
+
+//     if (!$message) {
+//         switch ($statusCode) {
+//             case 200:
+//                 $message = 'OK';
+//                 $resultcode = true;
+//                 break;
+//             case 201:
+//                 $message = 'Action was executed successfully';
+//                 break;
+//             case 204:
+//                 $message = 'No Content';
+//                 break;
+//             case 400:
+//                 $message = 'Bad Request: [' . $_SERVER['REQUEST_METHOD'] . '] is Not Allowed';
+//                 break;
+//             case 401:
+//                 $message = 'Unauthorized';
+//                 break;
+//             case 403:
+//                 $message = 'Forbidden';
+//                 break;
+//             case 404:
+//                 $message = '404 Not Found';
+//                 break;
+//             case 422:
+//                 $message = 'Unprocessable Entity Missing Parameters.';
+//                 break;
+//             case 0:
+//                 $message = 'Timed out Connection: Try again Later';
+//                 notify(1, "Timed out Connection: Try again Later.", 0, 1);
+//                 break;
+//             default:
+//                 $message = 'Timed out Connection: Try again Later';
+//         }
+//     }
+
+//     $response = ['status' => $statusCode, 'resultcode' => $resultcode, 'msg' => $message];
+
+//     if (strstate($data)) {
+//         $response['data'] = $data;
+//     }
+
+//     if (isset($_SESSION['notify'])) {
+//         $response['info'] = $_SESSION['notify'];
+//     }
+
+//     unset($_SESSION);
+//     header('Content-Type: application/json');
+//     echo json_encode($response);
+//     // echo json_encode(["text" => "Cliks"]);
+
+//     exit;
+// }
+
 function sendJsonResponse($statusCode, $resultcode = false, $message = null, $data = null)
 {
 
@@ -65,8 +125,6 @@ function sendJsonResponse($statusCode, $resultcode = false, $message = null, $da
     unset($_SESSION);
     header('Content-Type: application/json');
     echo json_encode($response);
-    // echo json_encode(["text" => "Cliks"]);
-
     exit;
 }
 
@@ -833,6 +891,7 @@ function updates($tb, $tbset, $tbwhere)
     $confirmtb = table($tb);
 
     $tb = isset($confirmtb['tb']) ? $confirmtb['tb'] : [];
+
     if (!$tb) {
         // notify(1,"error requested fn=>updates",503,3);
         return sendJsonResponse(500);
@@ -1252,7 +1311,7 @@ function stkpush()
 
 function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $attachmentName = null, $calendarEvent = null)
 {
-    $url = 'https://qash-empire.com/auth/';
+    $url = 'https://super-qash.com/auth/';
 
 
     $sub = $subarray;
@@ -1298,11 +1357,11 @@ function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $att
     $result = curl_exec($ch);
 
     // Check for errors
-    if ($result === false) {
-        error_log('cURL error: ' . curl_error($ch));
-    } else {
-        // error_log('Request successful');
-    }
+    // if ($result === false) {
+    //     error_log('cURL error: ' . curl_error($ch));
+    // } else {
+    //     // error_log('Request successful');
+    // }
 
     curl_close($ch);
 
@@ -1358,7 +1417,7 @@ function sendmail($uname, $uemail, $msg, $subarray, $attachmentPath = null, $att
     //     // Optionally, you can set a flag or add a message for further processing
     //     echo $errorMessage = "Mailer Error: " . $mail->ErrorInfo;
     // }
-    return true;
+    // return true;
 }
 
 
@@ -1370,31 +1429,31 @@ function data()
         $uid = $_SESSION['suid'];
 
         $dataq = "SELECT 
-    u.*, 
-    b.*, 
-    c.*, 
-    e.*, 
-    w.*,
-    u.active AS useractive, 
-    u.subscription AS usersubscription, 
-    e.active AS feeactive, 
-    w.active AS tarrifactive, 
-    u.l1 AS uplineid, 
-    u.l2 AS l2id, 
-    u.l3 AS l3id, 
-    p.uname AS upline,
-    ll.uname AS upline2,
-    lll.uname AS upline3
-FROM users u 
-INNER JOIN balances b ON u.uid = b.buid 
-LEFT JOIN users p ON u.l1 = p.uid 
-LEFT JOIN users ll ON u.l2 = ll.uid 
-LEFT JOIN users lll ON u.l3 = lll.uid 
-INNER JOIN countrys c ON u.default_currency = c.cid 
-LEFT JOIN affiliatefee e ON u.default_currency = e.cid AND e.active = true 
-LEFT JOIN withdrawalcharges w ON u.default_currency = w.wcid AND w.active = true 
-WHERE u.uid = '$uid' AND u.active = true ORDER BY w.tariff ASC ;
-";
+                u.*, 
+                b.*, 
+                c.*, 
+                e.*, 
+                w.*,
+                u.active AS useractive, 
+                u.subscription AS usersubscription, 
+                e.active AS feeactive, 
+                w.active AS tarrifactive, 
+                u.l1 AS uplineid, 
+                u.l2 AS l2id, 
+                u.l3 AS l3id, 
+                p.uname AS upline,
+                ll.uname AS upline2,
+                lll.uname AS upline3
+            FROM users u 
+            INNER JOIN balances b ON u.uid = b.buid 
+            LEFT JOIN users p ON u.l1 = p.uid 
+            LEFT JOIN users ll ON u.l2 = ll.uid 
+            LEFT JOIN users lll ON u.l3 = lll.uid 
+            INNER JOIN countrys c ON u.default_currency = c.cid 
+            LEFT JOIN affiliatefee e ON u.default_currency = e.cid AND e.active = true 
+            LEFT JOIN withdrawalcharges w ON u.default_currency = w.wcid AND w.active = true 
+            WHERE u.uid = '$uid' AND u.active = true ORDER BY w.tariff ASC ;
+            ";
         $dataquery = comboselects($dataq, 1);
 
         if ($dataquery['res']) {
