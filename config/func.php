@@ -64,8 +64,8 @@ function sendJsonResponse($statusCode, $resultcode = false, $message = null, $da
 
     unset($_SESSION);
     header('Content-Type: application/json');
-    // echo json_encode($response);
-    echo json_encode(["text" => "Cliks"]);
+    echo json_encode($response);
+    // echo json_encode(["text" => "Cliks"]);
 
     exit;
 }
