@@ -58,9 +58,9 @@ function sendJsonResponse($statusCode, $resultcode = false, $message = null, $da
         $response['data'] = $data;
     }
 
-    // if (isset($_SESSION['notify'])) {
-    //     $response['info'] = $_SESSION['notify'];
-    // }
+    if (isset($_SESSION['notify'])) {
+        $response['info'] = $_SESSION['notify'];
+    }
 
     unset($_SESSION);
     header('Content-Type: application/json');
