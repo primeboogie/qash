@@ -48,6 +48,11 @@ include "modules/index.php";
 // sendJsonResponse(0);
 // sleep(2);
 
+
+// $sleepTimes = [35, 26, 31, 50, 27];
+// $selectedTime = $sleepTimes[array_rand($sleepTimes)];
+// sleep($selectedTime);
+
 unset($_SESSION);
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';

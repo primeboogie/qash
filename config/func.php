@@ -281,210 +281,190 @@ function emailtemp($msg, $uname, $sub)
     $domain = $admin['domain'];
     $company = $admin['company'];
 
-    $msg = "<!DOCTYPE html>
+    // Logo URL - use absolute URL for email compatibility
+    $logoUrl = $domain . '/images/logo.png';
+
+    // Compact, modern email template
+    $emailContent = "<!DOCTYPE html>
 <html lang='en'>
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>$company Notification</title>
+    <title>$company - $sub</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
+
         body {
-            background-color: #f0f7f4;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 15px;
             line-height: 1.6;
-            color: #2d3748;
         }
-        
-        .email-container {
-            max-width: 600px;
+
+        .email-wrapper {
+            max-width: 580px;
             margin: 0 auto;
-            background: white;
-            border-radius: 12px;
+            background: #ffffff;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .email-header {
-            background: linear-gradient(135deg, #38a169, #48bb78);
-            padding: 40px 30px;
+            background: linear-gradient(135deg, #a24cd2 0%, #c469cc 100%);
+            padding: 20px;
             text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
+            color: #ffffff;
         }
-        
-        .header-leaf {
-            position: absolute;
-            opacity: 0.1;
-            width: 150px;
-            height: 150px;
+
+        .logo-container {
+            background: #ffffff;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         }
-        
-        .leaf-1 {
-            top: -30px;
-            left: -30px;
-            transform: rotate(45deg);
-        }
-        
-        .leaf-2 {
-            bottom: -40px;
-            right: -20px;
-            transform: rotate(220deg);
-        }
-        
-        .company-logo {
-            width: 70px;
-            height: 70px;
+
+        .logo {
+            max-width: 50px;
+            max-height: 50px;
             object-fit: contain;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
+            display: block;
         }
-        
+
         .company-name {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 5px;
-            position: relative;
-            z-index: 2;
-            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
         }
-        
+
         .email-subject {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 500;
-            margin-top: 10px;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 8px;
-            z-index: 2;
+            opacity: 0.95;
         }
-        
-        .email-subject:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 25%;
-            width: 50%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 2px;
-        }
-        
+
         .email-body {
-            padding: 35px;
-            color: #4a5568;
+            padding: 25px;
+            color: #333333;
         }
-        
+
         .greeting {
-            font-size: 16px;
-            margin-bottom: 25px;
-            color: #2d3748;
-        }
-        
-        .message-content {
-            margin-bottom: 30px;
             font-size: 15px;
+            margin-bottom: 18px;
+            color: #555555;
         }
-        
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+
+        .message-content {
+            font-size: 14px;
+            color: #555555;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .cta-container {
+            text-align: center;
             margin: 25px 0;
         }
-        
+
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #38a169, #48bb78);
-            color: white !important;
+            background: linear-gradient(135deg, #a24cd2, #c469cc);
+            color: #ffffff !important;
             text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 8px;
+            padding: 12px 28px;
+            border-radius: 6px;
             font-weight: 600;
-            margin: 20px 0;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(56, 161, 105, 0.2);
+            font-size: 14px;
+            box-shadow: 0 3px 8px rgba(162, 76, 210, 0.3);
+            transition: transform 0.2s ease;
         }
-        
+
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(56, 161, 105, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(162, 76, 210, 0.4);
         }
-        
+
         .email-footer {
-            margin-top: 30px;
+            margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #edf2f7;
-            font-size: 13px;
-            color: #718096;
-            line-height: 1.6;
+            border-top: 1px solid #e5e5e5;
+            font-size: 12px;
+            color: #888888;
         }
-        
-        .nature-icon {
-            color: #38a169;
-            margin-right: 8px;
-            vertical-align: middle;
+
+        .footer-note {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #a24cd2;
         }
-        
-        .signature {
-            color: #38a169;
-            font-weight: 600;
-            margin-top: 5px;
+
+        .footer-links {
+            margin-top: 15px;
+            font-size: 11px;
+            color: #999999;
         }
-        
-        .highlight-box {
-            background: #f0fff4;
-            border-left: 4px solid #48bb78;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .email-body {
+                padding: 20px 15px;
+            }
+
+            .cta-button {
+                padding: 10px 24px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class='email-container'>
+    <div class='email-wrapper'>
         <div class='email-header'>
-            <svg class='header-leaf leaf-1' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M50,10 C70,30 80,60 70,90 C40,80 20,50 30,20 C40,10 50,10 50,10 Z' fill='white'/>
-            </svg>
-            <svg class='header-leaf leaf-2' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
-                <path d='M50,10 C70,30 80,60 70,90 C40,80 20,50 30,20 C40,10 50,10 50,10 Z' fill='white'/>
-            </svg>
-            
-            <img src='$domain/images/logo2.jpg' alt='$company Logo' class='company-logo'>
+            <div class='logo-container'>
+                <img src='$logoUrl' alt='$company' class='logo' />
             </div>
-            
-        <div class='email-body'>
+            <div class='company-name'>$company</div>
+            <div class='email-subject'>$sub</div>
+        </div>
 
-        
+        <div class='email-body'>
+            <div class='greeting'>Hello <strong>$uname</strong>,</div>
+
             <div class='message-content'>
                 $msg
             </div>
-            
-            <div class='divider'></div>
-            
-            <div style='text-align: center;'>
-                <a href='$domain' class='cta-button'>
-                    <span class='nature-icon'>🌿</span> Visit Your Account
-                </a>
+
+            <div class='cta-container'>
+                <a href='$domain' class='cta-button'>Access Your Account</a>
             </div>
-            
+
             <div class='email-footer'>
-                <span class='nature-icon'>🌱</span> Need help? Contact our support team anytime.<br><br>
-                
-                <strong class='signature'>The $company Team</strong><br>
-                <span style='font-size:12px;'>Growing with you every step of the way</span>
-                
-                <div style='margin-top:15px; font-size:12px;'>
-                    <a href='$domain' style='color:#48bb78; text-decoration:none;'>$domain</a>
+                <div class='footer-note'>
+                    <strong>Security Reminder:</strong> Never share your login credentials with anyone.
+                </div>
+
+                <div style='margin-top: 12px;'>
+                    © " . date('Y') . " $company. All rights reserved.
+                </div>
+
+                <div class='footer-links'>
+                    This email was sent to you as a member of $company.<br>
+                    If you have any questions, please contact our support team.
                 </div>
             </div>
         </div>
@@ -492,7 +472,7 @@ function emailtemp($msg, $uname, $sub)
 </body>
 </html>";
 
-    return $msg;
+    return $emailContent;
 }
 
 // <div class='email-subject'>$sub</div>

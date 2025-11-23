@@ -248,7 +248,121 @@ function alluser()
         ON u3.uid = u.l3 
         LEFT JOIN affiliatefee e
         ON u.default_currency = e.cid AND e.active = true
-        WHERE 1 ORDER BY u.ustatus DESC ";
+        WHERE 1 ORDER BY u.ustatus DESC LIMIT 1000";
+
+        $dataquery = comboselects($dataq, 1);
+
+        if ($dataquery['res']) {
+
+            $i = 1;
+            foreach ($dataquery['qry'] as $data) {
+                $uid = $data['uid'];
+                if ($data['useractive'] == 1) {
+                    $acctive = "Live";
+                    $status = 3;
+                } else {
+                    $acctive = "Suspended";
+                }
+
+                if ($data['ustatus'] == 2) {
+                    $state = "Active";
+                    $status = 2;
+                } elseif ($data['ustatus'] == 1) {
+                    $state = "Dormant";
+                    $status = 1;
+                } elseif ($data['ustatus'] == 0) {
+                    $state = "Pending";
+                    $status = 0;
+                } else {
+                    $state = "Dormant";
+                    $status = 1;
+                }
+
+
+                $userdata = [
+                    // 'No' => $i++,
+                    'uname' => $data['uname'],
+                    'email' => $data['uemail'],
+                    'phone' => $data['uphone'],
+                    'status' => $status,
+                    'upline' => $data['upline1'],
+                    'l2' => $data['upline2'],
+                    'l3' => $data['upline3'],
+                    'active' => $data['useractive'],
+                    'country' => $data['cname'],
+                    // 'abrv' => $data['cuabrv'],
+                    'rate' => $data['crate'],
+                    'profit' => floatval($data['profit']),
+                    'balance' => floatval($data['balance']),
+                    'deposit' => floatval($data['deposit']),
+                    'trivia' => floatval($data['trivia']),
+                    'ads' => floatval($data['ads']),
+                    'tiktok' => floatval($data['tiktok']),
+                    'youtube' => floatval($data['youtube']),
+                    'spin' => floatval($data['spin']),
+                    'registration' => $data['creg'],
+                    'join' => $data['ujoin'],
+                    'cid' => $data['CID'],
+                    'randid' => $data['randid'],
+                    'uid' => $data['uid'],
+                    'sessionid' => $data['uid'],
+                ];
+
+                $response['query'][] = $userdata;
+            }
+
+            $response['res'] = true;
+        }
+
+
+
+        return sendJsonResponse(200, true, null, $response);
+    }
+}
+
+
+function searchuser()
+{
+
+    $inputs = jDecode(['phonenumber']); 
+
+    $phonenumber = $inputs['phonenumber'];
+
+
+    $response = [];
+
+    if (adminenv()) {
+
+        $data = $_SESSION['query']['data'];
+        $accname = $data['uname'];
+        $uid = $_SESSION['suid'];
+
+
+
+        $isadmin = $data['isadmin'];
+
+        if (!$isadmin) {
+            notify(1, "You Are Not Authorized To Access This Feature", 1, 1);
+            updates("use", "active = false ", "uid IN ('$uid')");
+            notify(1, "Suspened account for $accname tried to access admin Panel", 404, 2);
+            sendJsonResponse(401);
+        }
+
+
+        $dataq = "SELECT u.*, u.active AS useractive,b.*, c.*, e.*, c.cid AS CID, e.active AS feeactive, u1.uname AS upline1, u2.uname AS upline2, u3.uname AS upline3 FROM users u 
+        INNER JOIN balances b 
+        ON u.uid = b.buid 
+        INNER JOIN countrys c 
+        ON u.ucountryid = c.cid 
+        LEFT JOIN users u1
+        ON u1.uid = u.l1 
+        LEFT JOIN users u2
+        ON u2.uid = u.l2 
+        LEFT JOIN users u3
+        ON u3.uid = u.l3 
+        LEFT JOIN affiliatefee e
+        ON u.default_currency = e.cid AND e.active = true
+        WHERE u.uphone LIKE '%$phonenumber%' ORDER BY u.ustatus DESC LIMIT 1000";
 
         $dataquery = comboselects($dataq, 1);
 

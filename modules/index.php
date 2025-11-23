@@ -35,6 +35,7 @@ function authorized($action)
     if (auths()['status']) {
         switch ($action) {
             case 'alluser':
+            case 'searchuser':
             case 'tasks':
             case 'addTariff':
             case 'grabTariff':

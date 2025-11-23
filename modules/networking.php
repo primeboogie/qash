@@ -2705,7 +2705,7 @@ function casinoSpin($sysProfit)
 
 
 
-    $totalBets = floatval($runQuery['qry'][0]['total_stake']);
+    $totalBets = floatval(value: $runQuery['qry'][0]['total_stake']);
     $totalPayouts = floatval($runQuery['qry'][0]['total_payout']);
 
     if ($totalBets < 0 || $totalPayouts < 0) {
