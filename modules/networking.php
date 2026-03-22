@@ -2764,6 +2764,9 @@ function getRandomWeightedValue($values)
 function requestSpin()
 {
 
+    notify(2, "Please Try Again Later", 1, 1);
+    sendJsonResponse(404);
+
     if (sessioned()) {
 
         $inputs = jDecode(['spin_amount', 'acc']);
